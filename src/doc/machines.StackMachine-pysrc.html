@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>machines.StackMachine</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="afranck64.appspot.com">PySam</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;machines ::
+        Module&nbsp;StackMachine
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="machines.StackMachine-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="machines.StackMachine-module.html">Module machines.StackMachine</a></h1>
+<pre class="py-src">
+&#239;&#187;&#191;#-------------------------------------------------------------------------------
+# Name:        module1
+# Purpose:
+#
+# Author:      said
+#
+# Created:     23.06.2012
+# Copyright:   (c) said 2012
+# Licence:     <your licence>
+#-------------------------------------------------------------------------------
+#!/usr/bin/env python
+
+#from exceptions import *
+from Machine import *
+
+class StackMachine(Machine):
+    def __init__(self, text=None, dynamic=False, **kw):
+        Machine.__init__(self, text, dynamic, **kw)
+        self.EXCLUDES = ["LOAD", "STORE", "SWAP", "MOV", "COPY"]
+        self.stack = []
+
+    def executeArithmetic(self):
+        instruction = self.instructions[self.pc]
+        print (self.stack, self.memory)
+        if not len(instruction) == 1:
+            raise ParameterException("Two many parameter", line=self.getLine())
+        cmd = instruction[0]
+        if self.stack:
+            x = self.stack.pop()
+            if cmd == self.map["SQRT"]:
+                if x < 0:
+                    raise ArithmeticException("Square root of negativ number",
+                                                line=getLine())
+                self.stack.append(x**0.5)
+            elif cmd == self.map["NEG"]:
+                self.stack.append(-x)
+            elif cmd == self.map["ABS"]:
+                self.stack.append(abs(x))
+            elif 0 < len(self.stack) :
+                y = self.stack.pop()
+                if cmd == self.map["ADD"]:
+                    self.stack.append(y + x)
+                elif cmd == self.map["SUB"]:
+                    self.stack.append(y - x)
+                elif cmd == self.map["MUL"]:
+                    self.stack.append(y * x)
+                elif cmd == self.map["DIV"]:
+                    if x==0:
+                        raise ArithemeticException("Division by zero",
+                                                   line=self.getLine())
+                    self.stack.append(y / x)
+                elif cmd == self.map["MOD"]:
+                    if x==0:
+                        raise ArithemeticException("Division by zero",
+                                                   line=self.getLine())
+                    self.stack.append(y % x)
+                else:
+                    raise CommandException("Unknown Command",
+                                          line=self.getLine())
+            self.setFlags(self.stack[-1])
+        else:
+            raise ParameterException("Not enough parameter in stack",
+                                     line=self.getLine())
+
+    def executeDataTransfert(self):
+        instruction = self.instructions[self.pc]
+        cmd = instruction[0]
+        if len(instruction)==3 and  cmd == self.map["VAL"]:
+            self.createVar(instruction[1], instruction[2])
+        elif len(instruction) == 2:
+            if cmd == self.map["PUSH"]:
+                self.stack.append(self.getValue(instruction[1]))
+            elif cmd == self.map["POP"]:
+                if not self.stack:
+                    raise ParameterException("Not enough parameter in stack",
+                                             line=self.getLine())
+                if instruction[1] in self.namespace:
+                    self.memory[self.namespace[instruction[1]]] = self.stack.pop()
+                elif self.isDynamic and str(instruction[1]).isidentifier():
+                    self.createVar(instruction[1])
+                    self.memory[self.namespace[instruction[1]]] = self.stack.pop()
+                else:
+                    if self.isInteger(instruction[1]):
+                        self.setValue(instruction[1], self.stack.pop())
+                    else:
+                        raise NameException("Identifier not found",
+                                    found=instruction[1], line=self.getLine())
+            else:
+                    raise CommandException("Unknown Command",
+                                          line=self.getLine())
+        else:
+            raise ParameterException("Two many parameters",
+                                     line=self.getLine())
+
+if __name__ == "__main__":
+    txt = """val x 2
+val y 3
+val toto 5
+val papa 6
+val c 9
+retour: val a 2
+encore: val b 4
+push a
+push b
+push toto
+add
+add
+pop papa
+output papa
+output "FUCK spece de connar!!! YOU"
+""".upper()
+    m = StackMachine()
+    m.parse(txt)
+    m.loop()
+<script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="afranck64.appspot.com">PySam</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Sep 05 13:58:24 2013
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

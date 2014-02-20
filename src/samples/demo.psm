@@ -1,0 +1,19 @@
+machine0
+
+val x 2
+val y 3
+val toto 5
+val papa 6
+val c 9
+retour: val a 2
+encore: val b 4
+push 1
+push b
+push toto
+input toto
+output toto
+add
+add
+pop papa
+output papa
+output "FUCK spece de connar!!! \nYOU"

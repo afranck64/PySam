@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>machines.TwoAddressMachine</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="afranck64.appspot.com">PySam</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;machines ::
+        Module&nbsp;TwoAddressMachine
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="machines.TwoAddressMachine-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="machines.TwoAddressMachine-module.html">Module machines.TwoAddressMachine</a></h1>
+<pre class="py-src">
+&#239;&#187;&#191;#-------------------------------------------------------------------------------
+# Name:        module1
+# Purpose:
+#
+# Author:      said
+#
+# Created:     23.06.2012
+# Copyright:   (c) said 2012
+# Licence:     <your licence>
+#-------------------------------------------------------------------------------
+#!/usr/bin/env python
+
+from exceptions import *
+from Machine import Machine
+
+class TwoAddressMachine(Machine):
+    def __init__(self, text=None, dynamic=False, **kw):
+        Machine.__init__(self, text, dynamic, **kw)
+        self.EXCLUDE = ["PUSH", "POP"]
+
+    def excecuteDataTransfert(self):
+        instruction = self.instructions[self.pc]
+        cmd = instruction[0]
+        if len(instruction) == 3:
+            arg1, arg2 = instruction[1], instruction[2]
+            if cmd == self.map["VAL"]:
+                self.createVar(instruction[1], instruction[2])
+            elif cmd == self.map["SWAP"]:
+                tmp = self.getValue(arg1)
+                self.setValue(arg1, self.getValue(arg2))
+                self.setValue(arg2, tmp)
+            elif cmd == self.map["COPY"]:
+                self.setValue(arg1, self.getValue(arg2))
+
+    def executeArithmetic(self):
+        instruction = self.instructions[self.pc]
+        cmd = instruction[0]
+        if len(instruction) == 1:
+            raise ParameterException("Not enough parameters",
+                                     line=self.getLine())
+        elif len(instruction) == 2:
+            arg1 = instruction[1]
+            if cmd == self.map["NEG"]:
+                self.setValue(arg1, -self.getValue(arg1))
+            elif cmd == self.map["ABS"]:
+                self.setValue(arg1, abs(self.getValue(arg1)))
+            elif cmd == self.map["SQRT"]:
+                self.setValue(arg1, self.getValue(arg1)**0.5)
+            self.setFlags(self.getValue(arg1))
+        elif len(instruction) == 3:
+            arg1, arg2 = instruction[1], instruction[2]
+            if cmd == self.map["NEG"]:
+                self.setValue(arg1, -self.getValue(arg2))
+            elif cmd == self.map["ABS"]:
+                self.setValue(arg1, abs(self.getValue(arg2)))
+            elif cmd == self.map["SQRT"]:
+                self.setValue(arg1, self.getValue(arg2)**0.5)
+            if cmd == self.map["ADD"]:
+                self.setValue(arg1, self.getValue(arg1)+self.getValue(arg2))
+            elif cmd == self.map["SUB"]:
+                self.setValue(arg1, self.getValue(arg1)-self.getValue(arg2))
+            elif cmd == self.map["MUL"]:
+                self.setValue(arg1, self.getValue(arg1)*self.getValue(arg2))
+            elif cmd == self.map["DIV"]:
+                self.setValue(arg1, self.getValue(arg1)/self.getValue(arg2))
+            elif cmd == self.map["MOD"]:
+                self.setValue(arg1, self.getValue(arg1)%self.getValue(arg2))
+            elif cmd == self.map["POW"]:
+                self.setValue(arg1, self.getValue(arg1)**self.getValue(arg2))
+            self.setFlags(self.getValue(arg1))
+        else:
+            raise ParameterException("Too many parameters",
+                                    line=self.getLine())
+
+if __name__ == "__main__":
+    txt = """val x 32
+    val y 15
+    add x y
+    output blalbalba
+    output hello
+    output nano
+    close: output x
+    enddor:output y"""
+    m = TwoAddressMachine()
+    m.parse(txt)
+    m.loop()
+<script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="afranck64.appspot.com">PySam</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Sep 05 13:58:24 2013
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

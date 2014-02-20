@@ -1,0 +1,12 @@
+machine2
+
+val a 2
+val b 3
+val x 0
+load x a
+add x x a
+mul x a
+output x
+store a
+output a
+output "i am the king of the world"
