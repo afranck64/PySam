@@ -1,8 +1,8 @@
 # Ignore all pycache files.
+*.pyc
 *__pycache__
 *doc
 *src/__pycache__
 *src/doc
 TODO
-.pyc
-.*~
+*.*~

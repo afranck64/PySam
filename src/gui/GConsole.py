@@ -5,7 +5,7 @@
 # Author:      said
 #
 # Created:     23.06.2012
-# Copyright:   (c) said 2012
+# Copyright:   (c) Awounang Nekdem Franck
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
@@ -14,10 +14,10 @@
 try:
     from tkinter import *
     from tkinter.ttk import *
-    from tkinter import filedialog
-    from tkinter import simpledialog
+    #from tkinter import simpledialog
 except:
     from Tkinter import *
+    import tkSimpleDialog as simpledialog
 
 
 
@@ -97,6 +97,7 @@ class GConsole(Frame):
         return value
         """
         res = simpledialog.askinteger("Input", "Enter an integer!")
+        #dia = simpledialog.SimpleDialog(self, "input a value", title="yes")
         return res
         
     def validate(self):

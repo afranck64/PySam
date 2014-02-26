@@ -1,19 +1,9 @@
-﻿#-----------------------------------------------------------------------
-# Name:        module1
-# Purpose:
-#
-# Author:      said
-#
-# Created:     23.06.2012
-# Copyright:   (c) said 2012
-# Licence:     <your licence>
-#-------------------------------------------------------------------------------
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 
 try:
     from tkinter import *
     from tkinter.ttk import *
-    from tkinter import filedialog
+    #from tkinter import filedialog
 except:
     from Tkinter import *
 

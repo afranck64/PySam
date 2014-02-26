@@ -5,12 +5,12 @@
 # Author:      said
 #
 # Created:     23.06.2012
-# Copyright:   (c) afranck64 2012
+# Copyright:   (c) Awounang Nekdem Franck
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
 
-from machines import *
+from src.machines import *
 
 def getMachine(text='', file=None, **kw):
     if file:
@@ -31,7 +31,6 @@ def getMachine(text='', file=None, **kw):
         raise Machine.MachineException("Unknown machine", found=typ,
                                     line=line + "- at lineNr. 1")
     machine.parse(ens[1])
-    print (machine.output)
     return machine
 
 if __name__ == "__main__":

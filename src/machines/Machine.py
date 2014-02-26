@@ -5,7 +5,7 @@
 # Author:      afranck64
 #
 # Created:     23.06.2012
-# Copyright:   (c) afranck64 2012
+# Copyright:   (c) Awounang Nekdem Franck
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
@@ -18,7 +18,25 @@ def _print(*args, **kw):
         print (k,v)
 
 
-from exceptions import *
+#from src.machines.errors import *
+from errors import *
+
+class Type:
+    INT = 0
+    VAR = 1
+    STR = 2
+    MEM = 3
+    CMD = 4
+    LBL = 5
+    def __init__(self, value, type=None):
+        self.value = value
+        self.type = type
+        
+    def __str__(self):
+        return str('"%s"' % (str(self.value)))
+    
+    def __repr__(self):
+        return self.__str__()
 
 class Machine():
     def __init__(self, text=None, dynamic=False, registers=0, **kw):
@@ -62,7 +80,7 @@ class Machine():
         self.namespace[name] = len(self.memory)
         if self.isInteger(value):
             self.memory.append(self.getInteger(value))
-        elif str(value).isidentifier():
+        elif self.isIdentifier(value):
             self.memory.append(self.getValue(str(value)))
         else:
             raise ValueException()
@@ -91,6 +109,10 @@ class Machine():
             return False
         else:
             return True
+    
+    def isIdentifier(self, value):
+        value = str(value)
+        return len(value)>0 and value.isalnum() and not value[0].isdigit()# and value# in self.namespace
 
     def getInteger(self, value=0):
         value = str(value)
@@ -157,9 +179,11 @@ class Machine():
         self.fullcode = text.splitlines()
         for line in self.fullcode:
             linenumber += 1
-            if line and line[0] == "#":
+            if not line:
                 continue
-            if "\"" in line:
+            elif line and line[0] == "#":
+                continue
+            elif "\"" in line:
                 lst = ""
                 index = line.index("\"")
                 start = line[:index]
@@ -171,7 +195,7 @@ class Machine():
                     self.labels[lbl] = index
                     items.pop(0)
                     if cmd:
-                        items.insert(0, cmd)
+                        items.insert(0, Type(cmd, Type.CMD))
 
                 index += 1
                 while (len(line)>index and line[index]!= "\""):
@@ -181,12 +205,11 @@ class Machine():
                     raise ValueException("String not closed",
                             line=line + " at lineNr: " + str(linenumber))
                 if items:
-                    items.append(lst)
+                    items.append(Type(lst, Type.STR))
                 items.extend(line[index+1:].split())
                 for i, item in enumerate(items):
-                    if item.isdigit():
+                    pass#if item.isdigit():
                         #item[i] = int(item)
-                        pass
             else:
                 items = line.split()
                 if not items:
@@ -203,6 +226,13 @@ class Machine():
                         pass
             if items:
                 items[0] = items[0].upper()
+                allStr = True
+                for item in items:
+                    if not isinstance(item, (str, unicode)):
+                        allStr = False
+                        break
+                if not allStr and items[0]!=self.OUTPUT_OP:
+                    raise ValueException("String only allowed for output", line=line + " at lineNr: " + str(linenumber+1))
                 self.instructions.append(items)
                 self.linenumbers[index] = linenumber
                 index += 1
@@ -244,6 +274,8 @@ class Machine():
     def getLine(self):
         res = []
         line = self.instructions[self.pc]
+        print "linenumbs : ", self.linenumbers
+        print "lineNumb : ", self.getLineNumber()
         number = self.linenumbers[self.pc] + 1
         for i in line:
             res.append(str(i))
@@ -343,7 +375,8 @@ class Machine():
     ARITHMETIC_OPS = ["ADD", "SUB", "DIV", "MUL", "SQRT", "MOD", "ABS", "POW",
                       "NEG"]
     LOGICAL_OPS = ["JEZ", "JNE", "JLT", "JGT", "JLE", "JGE", "GOTO",]
-    IO_OPS = ["INPUT", "OUTPUT"]
+    OUTPUT_OP = "OUTPUT"
+    IO_OPS = ["INPUT", OUTPUT_OP]
 
 if __name__ == "__main__":
     txt = """val X 32
@@ -356,7 +389,7 @@ if __name__ == "__main__":
     fuckyou:
     output "salut frangin"
     goto mama
-    val y 34
+    val y "toto"
     mama: output "salut man, comment tu vas?"
     error:
     """.upper()

@@ -8,15 +8,9 @@
 # Copyright:   (c) Awounang Nekdem Franck
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
-#!/usr/bin/env
-import sys
-from src.machines.errors import *
+#!/usr/bin/env python
 
-import Machine as Machine
-import ThreeAddressMachine as ThreeAddressMachine
-import AccuMachine as AccuMachine
-import StackMachine as StackMachine
-import TwoAddressMachine as TwoAddressMachine
-import Loader as Loader
+import GPySam
 
-from src.machines import errors
+if __name__ == "__main__":
+    GPySam.main()

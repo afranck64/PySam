@@ -5,13 +5,13 @@
 # Author:      said
 #
 # Created:     23.06.2012
-# Copyright:   (c) afranck64 2012
+# Copyright:   (c) Awounang Nekdem Franck
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
 
 import machines
-import Loader
+import machines.Loader as Loader
 import sys
 import os.path
 

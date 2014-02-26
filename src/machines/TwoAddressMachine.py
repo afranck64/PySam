@@ -5,12 +5,12 @@
 # Author:      said
 #
 # Created:     23.06.2012
-# Copyright:   (c) said 2012
+# Copyright:   (c) Awounang Nekdem Franck
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
 
-from exceptions import *
+from errors import *
 from Machine import Machine
 
 class TwoAddressMachine(Machine):

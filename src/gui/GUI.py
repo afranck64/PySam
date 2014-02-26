@@ -5,7 +5,7 @@
 # Author:      said
 #
 # Created:     23.06.2012
-# Copyright:   (c) said 2012
+# Copyright:   (c) Awounang Nekdem Franck
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
@@ -13,7 +13,7 @@
 try:
     from tkinter import *
     from tkinter.ttk import *
-    from tkinter import filedialog
+    #from tkinter import filedialog
 except:
     from Tkinter import *
     from ttk import *
@@ -28,7 +28,9 @@ for i in ("../", "../..", "../../.."):
 #from Console import Console
 from ColoredText import ColoredText
 from GConsole import GConsole
-from machines import *
+#from machines import *
+from src.machines.errors import *
+from src.machines import Loader
 
 
 _FILE_TYPES = [("Pysam files", "*.psm"), ("All files", "*.*")]
@@ -148,7 +150,7 @@ class Application():
             if not title in self.titlemap:
                 ctext = self.pages[title]
                 ctext.text.delete("1.0", END)
-                ctext.text.insert("1.0", open(filename, encoding="utf8").read())
+                ctext.text.insert("1.0", open(filename,).read())
                 nTitle = path.split(filename)[1]
                 self.pages.pop(title)
                 self.titlemap.pop(title)
@@ -188,7 +190,7 @@ class Application():
             filename = filedialog.asksaveasfilename(filetypes=_FILE_TYPES)
             changed = True
         if filename:
-            f = open(filename, "w", encoding="utf8")
+            f = open(filename, "w")
             f.write(self.pages[title].gettext())
             if changed:
                 ctext = self.pages[title]

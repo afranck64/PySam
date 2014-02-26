@@ -1,19 +1,20 @@
 machine0
-
 val x 2
 val y 3
 val toto 5
 val papa 6
 val c 9
-retour: val a 2
-encore: val b 4
-push 1
+val d 2323
+retour: val a 22
+encore: val b 4 
+push a
 push b
 push toto
 input toto
 output toto
+output 9
 add
 add
 pop papa
 output papa
-output "FUCK spece de connar!!! \nYOU"
+output "hello all of you :D"

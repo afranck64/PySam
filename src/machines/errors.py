@@ -5,17 +5,20 @@
 # Author:      said
 #
 # Created:     23.06.2012
-# Copyright:   (c) said 2012
+# Copyright:   (c) Awounang Nekdem Franck
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
 
+#__all__ = ["PySamException", "SyntaxException"]
+
 class PySamException(Exception):
-    def __init__(self, msg=None, *args, **kw):
+    def __init__(self, msg="", *args, **kw):
         lst = list(args)
         lst.extend(kw.items())
         self.__dict__.update(kw)
         res = ["ERROR:", msg]
+        print "begin : ", res
         for item in args:
             res.append(str(item))
         for key, item in kw.items():
@@ -26,6 +29,7 @@ class PySamException(Exception):
             elif key == "waiting":
                 item = "\t waiting: %s\n" %(item)
             res.append(str(item))
+        print "end : ", res
         Exception.__init__(self, " ".join(res))
 
 class ParameterException(PySamException):
@@ -57,9 +61,5 @@ class ValueException(PySamException):
         PySamException.__init__(self, msg, *args, **kw)
 
 class MachineException(PySamException):
-    def __init__(self, msg=None, *args, **kw):
-        PySamException.__init__(self, msg, *args, **kw)
-
-class SyntaxException(PySamException):
     def __init__(self, msg=None, *args, **kw):
         PySamException.__init__(self, msg, *args, **kw)
