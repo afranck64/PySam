@@ -29,8 +29,8 @@ for i in ("../", "../..", "../../.."):
 from ColoredText import ColoredText
 from GConsole import GConsole
 #from machines import *
-from src.machines.errors import *
-from src.machines import Loader
+from machines.errors import *
+from machines import Loader
 
 
 _FILE_TYPES = [("Pysam files", "*.psm"), ("All files", "*.*")]
@@ -88,16 +88,19 @@ class Application():
         self.openfiles = []
 
     def addFile(self, filename):
-        title = path.split(filename)[1]
-        self.titlemap[title] = filename
-        ctext = ColoredText(self.root)
-        f = open(filename, "r")
-        txt = f.read()
-        ctext.text.insert(END, txt)
-        f.close()
-        ctext.pack()
-        self.pages[title] = ctext
-        self.notebook.add(ctext, text=title)
+        try:
+            title = path.split(filename)[1]
+            f = open(filename, "r")
+            self.titlemap[title] = filename
+            ctext = ColoredText(self.root)
+            txt = f.read()
+            ctext.text.insert(END, txt)
+            f.close()
+            ctext.pack()
+            self.pages[title] = ctext
+            self.notebook.add(ctext, text=title)
+        except:
+            pass
 
     def newFile(self):
         filename = "unsaved document - " + str(self.counter)
@@ -204,6 +207,7 @@ class Application():
 
 
     def mainloop(self, n=0):
+        self.newFile()
         self.root.mainloop(n)
 
 if __name__ == "__main__":

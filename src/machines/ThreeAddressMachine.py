@@ -1,4 +1,4 @@
-﻿#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Name:        module1
 # Purpose:
 #
@@ -10,7 +10,7 @@
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
 
-from src.machines.errors import *
+from errors import *
 from TwoAddressMachine import *
 
 class ThreeAddressMachine(TwoAddressMachine):

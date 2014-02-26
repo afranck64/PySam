@@ -1,4 +1,4 @@
-﻿#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Name:        module1
 # Purpose:
 #
@@ -10,7 +10,7 @@
 #-------------------------------------------------------------------------------
 #!/usr/bin/env python
 
-from src.machines import *
+import Machine, StackMachine, AccuMachine, TwoAddressMachine, ThreeAddressMachine
 
 def getMachine(text='', file=None, **kw):
     if file:

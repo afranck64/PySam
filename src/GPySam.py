@@ -1,4 +1,4 @@
-﻿#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Name:        module1
 # Purpose:
 #
@@ -12,6 +12,7 @@
 
 import sys
 import os.path as path
+sys.path.append("..")
 sys.path.append(path.abspath(".\gui"))
 sys.path.append(path.abspath(".\machines"))
 import machines

@@ -1,4 +1,4 @@
-﻿#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Name:        module1
 # Purpose:
 #
@@ -10,7 +10,7 @@
 #-------------------------------------------------------------------------------
 #!/usr/bin/env
 import sys
-from src.machines.errors import *
+from errors import *
 
 import Machine as Machine
 import ThreeAddressMachine as ThreeAddressMachine
@@ -19,4 +19,4 @@ import StackMachine as StackMachine
 import TwoAddressMachine as TwoAddressMachine
 import Loader as Loader
 
-from src.machines import errors
+from machines import errors
